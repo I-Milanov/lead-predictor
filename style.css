@@ -232,6 +232,7 @@ body {
 }
 
 .chart-wrap {
+  position: relative;
   display: flex;
   gap: 8px;
   height: 320px;

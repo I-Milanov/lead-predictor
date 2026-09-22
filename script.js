@@ -206,10 +206,10 @@
       group.appendChild(label);
 
       group.addEventListener("mousemove", (evt) => {
-        const rect = svg.getBoundingClientRect();
+        const wrapRect = el.chartWrap.getBoundingClientRect();
         tooltip.style.display = "block";
-        tooltip.style.left = evt.clientX - rect.left + leftPad + "px";
-        tooltip.style.top = evt.clientY - rect.top + "px";
+        tooltip.style.left = evt.clientX - wrapRect.left + "px";
+        tooltip.style.top = evt.clientY - wrapRect.top + "px";
         tooltip.innerHTML =
           `<strong>Month #${m}</strong><br>` +
           `Prospects: ${formatNumber(rowProspects)}<br>` +
