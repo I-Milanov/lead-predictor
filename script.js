@@ -17,6 +17,8 @@
     avgOrderValue: document.getElementById("avg-order-value"),
     leadRate: document.getElementById("lead-rate"),
     prospectRate: document.getElementById("prospect-rate"),
+    leadRateFill: document.getElementById("lead-rate-fill"),
+    prospectRateFill: document.getElementById("prospect-rate-fill"),
     leadRateValue: document.getElementById("lead-rate-value"),
     prospectRateValue: document.getElementById("prospect-rate-value"),
     chart: document.getElementById("chart"),
@@ -89,6 +91,13 @@
     if (!isoValue) return "";
     const [year, month, day] = isoValue.split("-");
     return `${day}-${MONTH_ABBR[Number(month) - 1]}-${year}`;
+  }
+
+  function syncSliderFill(input, fillEl) {
+    const min = Number(input.min) || 0;
+    const max = Number(input.max) || 100;
+    const percent = ((Number(input.value) - min) / (max - min)) * 100;
+    fillEl.style.width = Math.max(0, Math.min(100, percent)) + "%";
   }
 
   function syncDateDisplays() {
@@ -230,6 +239,8 @@
 
     el.leadRateValue.textContent = leadRate.toFixed(2) + "%";
     el.prospectRateValue.textContent = prospectRate.toFixed(2) + "%";
+    syncSliderFill(el.leadRate, el.leadRateFill);
+    syncSliderFill(el.prospectRate, el.prospectRateFill);
 
     const customers = calcCustomers(totalRevenue, avgOrderValue);
     const leads = calcLeads(customers, leadRate);

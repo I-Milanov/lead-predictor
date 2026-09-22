@@ -411,7 +411,26 @@ body {
   text-align: right;
 }
 
+.range-track-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.range-track-fill {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 8px;
+  border-radius: 4px;
+  background: var(--accent);
+  pointer-events: none;
+}
+
 input[type="range"] {
+  position: relative;
+  z-index: 1;
   -webkit-appearance: none;
   appearance: none;
   width: 100%;
