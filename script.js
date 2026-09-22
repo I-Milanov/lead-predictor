@@ -58,8 +58,15 @@
   function readInputs() {
     const currencyOpt = el.currency.options[el.currency.selectedIndex];
     const symbol = currencyOpt.dataset.symbol || "$";
-    el.revenuePrefix.textContent = symbol;
-    el.orderPrefix.textContent = symbol;
+    el.revenuePrefix.textContent = "";
+    el.orderPrefix.textContent = "";
+
+    if (!el.totalRevenue.value.startsWith(symbol)) {
+      el.totalRevenue.value = symbol + el.totalRevenue.value;
+    }
+    if (!el.avgOrderValue.value.startsWith(symbol)) {
+      el.avgOrderValue.value = symbol + el.avgOrderValue.value;
+    }
 
     const totalRevenue = Math.max(0, Number(el.totalRevenue.value) || 0);
     const avgOrderValue = Math.max(1, Number(el.avgOrderValue.value) || 1);
