@@ -316,10 +316,21 @@ body {
 }
 
 /* Each metric's accent matches its color in the funnel chart above,
-   so the chart and the stat cards read as one consistent palette. */
-.stat-card--prospects { --stat-color: var(--bar-prospects); }
-.stat-card--leads { --stat-color: var(--bar-leads); }
-.stat-card--customers { --stat-color: var(--bar-customers); }
+   so the chart and the stat cards read as one consistent palette. The
+   card background itself also steps from dark to light across the
+   funnel stages, echoing how the bars stack up in the chart. */
+.stat-card--prospects {
+  --stat-color: var(--bar-prospects);
+  background: color-mix(in srgb, var(--stat-color) 12%, var(--panel));
+}
+.stat-card--leads {
+  --stat-color: var(--bar-leads);
+  background: color-mix(in srgb, var(--stat-color) 28%, var(--panel));
+}
+.stat-card--customers {
+  --stat-color: var(--bar-customers);
+  background: color-mix(in srgb, var(--stat-color) 45%, var(--panel));
+}
 
 .stat-head {
   display: flex;
