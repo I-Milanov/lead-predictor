@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LeadPredictor</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app">
+
+  <aside class="panel sidebar">
+    <div class="logo"><span class="logo-icon">&#9660;</span>LeadPredictor</div>
+
+    <div class="field">
+      <label for="language">Language</label>
+      <select id="language">
+        <option value="en">&#127482;&#127480; English</option>
+        <option value="bg">&#127463;&#127468; Bulgarian</option>
+        <option value="de">&#127465;&#127466; German</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="currency">Currency</label>
+      <select id="currency">
+        <option value="USD" data-symbol="$">$ US Dollar</option>
+        <option value="EUR" data-symbol="&#8364;">&#8364; Euro</option>
+        <option value="GBP" data-symbol="&#163;">&#163; British Pound</option>
+        <option value="BGN" data-symbol="&#1083;&#1074;.">&#1083;&#1074;. Bulgarian Lev</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="campaign-start">Campaign Start</label>
+      <input type="date" id="campaign-start" value="2026-05-08">
+    </div>
+
+    <div class="field">
+      <label for="campaign-end">Campaign End</label>
+      <input type="date" id="campaign-end" value="2026-11-04">
+    </div>
+
+    <div class="field">
+      <label for="total-revenue">Total Revenue</label>
+      <div class="input-prefixed">
+        <span class="prefix" id="revenue-prefix">$</span>
+        <input type="number" id="total-revenue" value="10000" min="0" step="100">
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="avg-order-value">Avg. Order Value</label>
+      <div class="input-prefixed">
+        <span class="prefix" id="order-prefix">$</span>
+        <input type="number" id="avg-order-value" value="1000" min="1" step="10">
+      </div>
+    </div>
+  </aside>
+
+  <main class="panel chart-panel">
+    <div class="chart-wrap">
+      <div class="y-axis-label">Months</div>
+      <svg id="chart" class="chart" preserveAspectRatio="none"></svg>
+    </div>
+  </main>
+
+  <aside class="stats">
+    <div class="stat-card" id="card-prospects">
+      <div class="stat-head">
+        <span class="stat-icon">&#128193;</span>
+        <span class="stat-name">Prospects</span>
+        <span class="stat-pct" id="prospects-pct">100%</span>
+      </div>
+      <div class="stat-value" id="prospects-value">0</div>
+      <div class="stat-bar"><div class="stat-bar-fill" id="prospects-bar" style="width:100%"></div></div>
+    </div>
+
+    <div class="stat-card" id="card-leads">
+      <div class="stat-head">
+        <span class="stat-icon">&#128100;</span>
+        <span class="stat-name">Leads</span>
+        <span class="stat-pct" id="leads-pct">0%</span>
+      </div>
+      <div class="stat-value" id="leads-value">0</div>
+      <div class="stat-bar"><div class="stat-bar-fill" id="leads-bar" style="width:0%"></div></div>
+    </div>
+
+    <div class="stat-card" id="card-customers">
+      <div class="stat-head">
+        <span class="stat-icon">&#127942;</span>
+        <span class="stat-name">Customers</span>
+        <span class="stat-pct" id="customers-pct">0%</span>
+      </div>
+      <div class="stat-value" id="customers-value">0</div>
+      <div class="stat-bar"><div class="stat-bar-fill" id="customers-bar" style="width:0%"></div></div>
+    </div>
+  </aside>
+
+  <section class="panel sliders">
+    <div class="slider-field">
+      <label for="lead-rate">Lead Response Rate</label>
+      <input type="range" id="lead-rate" min="1" max="100" step="0.5" value="40">
+      <span class="slider-value" id="lead-rate-value">40.00%</span>
+    </div>
+    <div class="slider-field">
+      <label for="prospect-rate">Prospect Response Rate</label>
+      <input type="range" id="prospect-rate" min="1" max="100" step="0.5" value="20">
+      <span class="slider-value" id="prospect-rate-value">20.00%</span>
+    </div>
+  </section>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
