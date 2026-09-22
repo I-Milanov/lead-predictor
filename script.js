@@ -10,7 +10,9 @@
     revenuePrefix: document.getElementById("revenue-prefix"),
     orderPrefix: document.getElementById("order-prefix"),
     campaignStart: document.getElementById("campaign-start"),
+    campaignStartDisplay: document.getElementById("campaign-start-display"),
     campaignEnd: document.getElementById("campaign-end"),
+    campaignEndDisplay: document.getElementById("campaign-end-display"),
     totalRevenue: document.getElementById("total-revenue"),
     avgOrderValue: document.getElementById("avg-order-value"),
     leadRate: document.getElementById("lead-rate"),
@@ -76,6 +78,24 @@
 
   function formatNumber(n) {
     return Math.round(n).toLocaleString("en-US");
+  }
+
+  const MONTH_ABBR = [
+    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+  ];
+
+  function formatDateDisplay(isoValue) {
+    if (!isoValue) return "";
+    const [year, month, day] = isoValue.split("-");
+    return `${day}-${MONTH_ABBR[Number(month) - 1]}-${year}`;
+  }
+
+  function syncDateDisplays() {
+    el.campaignStartDisplay.textContent = formatDateDisplay(
+      el.campaignStart.value
+    );
+    el.campaignEndDisplay.textContent = formatDateDisplay(el.campaignEnd.value);
   }
 
   const svgNS = "http://www.w3.org/2000/svg";
@@ -203,6 +223,8 @@
   }
 
   function render() {
+    syncDateDisplays();
+
     const { totalRevenue, avgOrderValue, leadRate, prospectRate, months } =
       readInputs();
 

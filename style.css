@@ -190,6 +190,41 @@ body {
   outline: none;
 }
 
+/* Date fields: native input drives the picker, styled span shows the
+   "08-May-2026" format the native control can't render on its own. */
+.date-field {
+  position: relative;
+}
+
+.date-field input[type="date"] {
+  position: relative;
+  z-index: 1;
+  color: transparent;
+  background: transparent;
+}
+
+.date-field input[type="date"]::-webkit-datetime-edit,
+.date-field input[type="date"]::-webkit-datetime-edit-fields-wrapper {
+  color: transparent;
+}
+
+.date-field input[type="date"]::-webkit-calendar-picker-indicator {
+  position: relative;
+  z-index: 2;
+  filter: invert(0.6);
+  cursor: pointer;
+}
+
+.date-display {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text);
+  font-size: 0.9rem;
+  pointer-events: none;
+}
+
 /* Chart panel */
 .chart-panel {
   grid-column: 2;
