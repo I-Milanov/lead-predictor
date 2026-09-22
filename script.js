@@ -74,8 +74,105 @@
     return Math.round(n).toLocaleString("en-US");
   }
 
+  const svgNS = "http://www.w3.org/2000/svg";
+
+  function drawChart(prospectsTotal, leadsTotal, customersTotal, months) {
+    const svg = el.chart;
+    svg.innerHTML = "";
+
+    const width = svg.clientWidth || 640;
+    const height = svg.clientHeight || 320;
+    const leftPad = 30;
+    const rightPad = 10;
+    const topPad = 10;
+    const bottomPad = 26;
+
+    svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+
+    const plotWidth = width - leftPad - rightPad;
+    const plotHeight = height - topPad - bottomPad;
+    const rowGap = 8;
+    const barHeight = Math.max(
+      10,
+      (plotHeight - rowGap * (months - 1)) / months
+    );
+
+    const maxProspects = Math.max(1, prospectsTotal);
+    const scale = plotWidth / maxProspects;
+
+    for (let m = 1; m <= months; m++) {
+      const fraction = m / months;
+      const rowProspects = prospectsTotal * fraction;
+      const rowLeads = leadsTotal * fraction;
+      const rowCustomers = customersTotal * fraction;
+
+      const y = topPad + (m - 1) * (barHeight + rowGap);
+
+      const group = document.createElementNS(svgNS, "g");
+      group.setAttribute("class", "chart-bar");
+
+      const bg = document.createElementNS(svgNS, "rect");
+      bg.setAttribute("class", "chart-bar-bg");
+      bg.setAttribute("x", leftPad);
+      bg.setAttribute("y", y);
+      bg.setAttribute("width", Math.max(0, rowProspects * scale));
+      bg.setAttribute("height", barHeight);
+      bg.setAttribute("rx", 3);
+      group.appendChild(bg);
+
+      const leadsBar = document.createElementNS(svgNS, "rect");
+      leadsBar.setAttribute("class", "chart-bar-leads");
+      leadsBar.setAttribute("x", leftPad);
+      leadsBar.setAttribute("y", y);
+      leadsBar.setAttribute("width", Math.max(0, rowLeads * scale));
+      leadsBar.setAttribute("height", barHeight);
+      leadsBar.setAttribute("rx", 3);
+      group.appendChild(leadsBar);
+
+      const custBar = document.createElementNS(svgNS, "rect");
+      custBar.setAttribute("class", "chart-bar-customers");
+      custBar.setAttribute("x", leftPad);
+      custBar.setAttribute("y", y);
+      custBar.setAttribute("width", Math.max(0, rowCustomers * scale));
+      custBar.setAttribute("height", barHeight);
+      custBar.setAttribute("rx", 3);
+      group.appendChild(custBar);
+
+      const label = document.createElementNS(svgNS, "text");
+      label.setAttribute("class", "chart-axis-text");
+      label.setAttribute("x", leftPad - 8);
+      label.setAttribute("y", y + barHeight / 2 + 4);
+      label.setAttribute("text-anchor", "end");
+      label.textContent = String(m);
+      group.appendChild(label);
+
+      svg.appendChild(group);
+    }
+
+    const axisLine = document.createElementNS(svgNS, "line");
+    axisLine.setAttribute("class", "chart-axis-line");
+    axisLine.setAttribute("x1", leftPad);
+    axisLine.setAttribute("y1", topPad);
+    axisLine.setAttribute("x2", leftPad);
+    axisLine.setAttribute("y2", height - bottomPad + 6);
+    svg.appendChild(axisLine);
+
+    const ticks = 6;
+    for (let t = 0; t <= ticks; t++) {
+      const val = Math.round((maxProspects / ticks) * t);
+      const x = leftPad + val * scale;
+      const tickText = document.createElementNS(svgNS, "text");
+      tickText.setAttribute("class", "chart-axis-text");
+      tickText.setAttribute("x", x);
+      tickText.setAttribute("y", height - bottomPad + 20);
+      tickText.setAttribute("text-anchor", "middle");
+      tickText.textContent = formatNumber(val) + " people";
+      svg.appendChild(tickText);
+    }
+  }
+
   function render() {
-    const { totalRevenue, avgOrderValue, leadRate, prospectRate } =
+    const { totalRevenue, avgOrderValue, leadRate, prospectRate, months } =
       readInputs();
 
     el.leadRateValue.textContent = leadRate.toFixed(2) + "%";
@@ -100,7 +197,7 @@
     el.leadsBar.style.width = Math.min(100, leadsPct) + "%";
     el.customersBar.style.width = Math.min(100, customersPct) + "%";
 
-    // Funnel chart rendering lands in a later commit.
+    drawChart(prospects, leads, customers, months);
   }
 
   [
@@ -112,6 +209,8 @@
     el.leadRate,
     el.prospectRate,
   ].forEach((input) => input.addEventListener("input", render));
+
+  window.addEventListener("resize", render);
 
   render();
 })();
