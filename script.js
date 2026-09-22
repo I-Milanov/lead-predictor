@@ -142,6 +142,20 @@
 
     const maxProspects = Math.max(1, prospectsTotal);
     const scale = plotWidth / maxProspects;
+    const gridBottom = height - bottomPad + 6;
+    const tickCount = 6;
+
+    for (let t = 0; t <= tickCount; t++) {
+      const val = Math.round((maxProspects / tickCount) * t);
+      const x = leftPad + val * scale;
+      const gridLine = document.createElementNS(svgNS, "line");
+      gridLine.setAttribute("class", "chart-grid-line");
+      gridLine.setAttribute("x1", x);
+      gridLine.setAttribute("y1", topPad);
+      gridLine.setAttribute("x2", x);
+      gridLine.setAttribute("y2", gridBottom);
+      svg.appendChild(gridLine);
+    }
 
     const tooltip = getTooltip();
 
@@ -217,9 +231,8 @@
     axisLine.setAttribute("y2", height - bottomPad + 6);
     svg.appendChild(axisLine);
 
-    const ticks = 6;
-    for (let t = 0; t <= ticks; t++) {
-      const val = Math.round((maxProspects / ticks) * t);
+    for (let t = 0; t <= tickCount; t++) {
+      const val = Math.round((maxProspects / tickCount) * t);
       const x = leftPad + val * scale;
       const tickText = document.createElementNS(svgNS, "text");
       tickText.setAttribute("class", "chart-axis-text");

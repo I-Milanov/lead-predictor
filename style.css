@@ -277,6 +277,12 @@ body {
   stroke-width: 1;
 }
 
+.chart-grid-line {
+  stroke: var(--border);
+  stroke-width: 1;
+  opacity: 0.5;
+}
+
 .chart-axis-text {
   fill: var(--text-muted);
   font-size: 11px;
