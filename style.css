@@ -315,6 +315,12 @@ body {
   padding: 16px 18px;
 }
 
+/* Each metric's accent matches its color in the funnel chart above,
+   so the chart and the stat cards read as one consistent palette. */
+.stat-card--prospects { --stat-color: var(--bar-prospects); }
+.stat-card--leads { --stat-color: var(--bar-leads); }
+.stat-card--customers { --stat-color: var(--bar-customers); }
+
 .stat-head {
   display: flex;
   align-items: center;
@@ -323,7 +329,15 @@ body {
 }
 
 .stat-icon {
-  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 7px;
+  background: color-mix(in srgb, var(--stat-color) 22%, transparent);
+  color: var(--stat-color);
+  flex-shrink: 0;
 }
 
 .stat-name {
@@ -353,7 +367,7 @@ body {
 
 .stat-bar-fill {
   height: 100%;
-  background: var(--accent);
+  background: var(--stat-color);
   border-radius: 4px;
   transition: width 0.25s ease;
 }
