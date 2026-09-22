@@ -14,12 +14,25 @@
     <div class="logo"><span class="logo-icon">&#9660;</span>LeadPredictor</div>
 
     <div class="field">
-      <label for="language">Language</label>
-      <select id="language">
-        <option value="en">&#127482;&#127480; English</option>
-        <option value="bg">&#127463;&#127468; Bulgarian</option>
-        <option value="de">&#127465;&#127466; German</option>
-      </select>
+      <label id="language-label">Language</label>
+      <div class="flag-select" id="language-select">
+        <button type="button" class="flag-select-trigger" id="language-trigger" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="language-label">
+          <img class="flag-icon" src="https://flagcdn.com/24x18/us.png" width="24" height="18" alt="">
+          <span id="language-trigger-text">English</span>
+          <svg class="flag-select-chevron" width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="flag-select-menu" id="language-menu" role="listbox" hidden>
+          <li role="option" data-value="en" data-label="English" data-flag="us" aria-selected="true">
+            <img class="flag-icon" src="https://flagcdn.com/24x18/us.png" width="24" height="18" alt="">English
+          </li>
+          <li role="option" data-value="bg" data-label="Bulgarian" data-flag="bg" aria-selected="false">
+            <img class="flag-icon" src="https://flagcdn.com/24x18/bg.png" width="24" height="18" alt="">Bulgarian
+          </li>
+          <li role="option" data-value="de" data-label="German" data-flag="de" aria-selected="false">
+            <img class="flag-icon" src="https://flagcdn.com/24x18/de.png" width="24" height="18" alt="">German
+          </li>
+        </ul>
+      </div>
     </div>
 
     <div class="field">

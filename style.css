@@ -91,6 +91,77 @@ body {
   border-color: #5b6b94;
 }
 
+/* Flag dropdown (custom, since flag emoji don't render on Windows) */
+.flag-select {
+  position: relative;
+}
+
+.flag-select-trigger {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  background: var(--panel-alt);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  padding: 9px 10px;
+  font-size: 0.9rem;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.flag-select-trigger:focus {
+  outline: none;
+  border-color: #5b6b94;
+}
+
+.flag-select-trigger span {
+  flex: 1;
+  text-align: left;
+}
+
+.flag-select-chevron {
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.flag-icon {
+  display: block;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.flag-select-menu {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  z-index: 20;
+  margin: 0;
+  padding: 4px;
+  list-style: none;
+  background: var(--panel-alt);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.flag-select-menu li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 8px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.flag-select-menu li:hover,
+.flag-select-menu li[aria-selected="true"] {
+  background: var(--panel);
+}
+
 .input-prefixed {
   display: flex;
   align-items: center;

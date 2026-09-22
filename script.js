@@ -2,6 +2,10 @@
   "use strict";
 
   const el = {
+    languageSelect: document.getElementById("language-select"),
+    languageTrigger: document.getElementById("language-trigger"),
+    languageTriggerText: document.getElementById("language-trigger-text"),
+    languageMenu: document.getElementById("language-menu"),
     currency: document.getElementById("currency"),
     revenuePrefix: document.getElementById("revenue-prefix"),
     orderPrefix: document.getElementById("order-prefix"),
@@ -226,6 +230,48 @@
 
     drawChart(prospects, leads, customers, months);
   }
+
+  function setupLanguageDropdown() {
+    const trigger = el.languageTrigger;
+    const menu = el.languageMenu;
+    const triggerFlag = trigger.querySelector(".flag-icon");
+
+    function close() {
+      menu.hidden = true;
+      trigger.setAttribute("aria-expanded", "false");
+    }
+
+    function open() {
+      menu.hidden = false;
+      trigger.setAttribute("aria-expanded", "true");
+    }
+
+    trigger.addEventListener("click", () => {
+      menu.hidden ? open() : close();
+    });
+
+    menu.querySelectorAll("li").forEach((option) => {
+      option.addEventListener("click", () => {
+        menu
+          .querySelectorAll("li")
+          .forEach((li) => li.setAttribute("aria-selected", "false"));
+        option.setAttribute("aria-selected", "true");
+        el.languageTriggerText.textContent = option.dataset.label;
+        triggerFlag.src = `https://flagcdn.com/24x18/${option.dataset.flag}.png`;
+        close();
+      });
+    });
+
+    document.addEventListener("click", (evt) => {
+      if (!el.languageSelect.contains(evt.target)) close();
+    });
+
+    document.addEventListener("keydown", (evt) => {
+      if (evt.key === "Escape") close();
+    });
+  }
+
+  setupLanguageDropdown();
 
   [
     el.currency,
