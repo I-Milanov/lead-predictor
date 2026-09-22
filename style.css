@@ -91,6 +91,77 @@ body {
   border-color: #5b6b94;
 }
 
+/* Flag dropdown (custom, since flag emoji don't render on Windows) */
+.flag-select {
+  position: relative;
+}
+
+.flag-select-trigger {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  background: var(--panel-alt);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  padding: 9px 10px;
+  font-size: 0.9rem;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.flag-select-trigger:focus {
+  outline: none;
+  border-color: #5b6b94;
+}
+
+.flag-select-trigger span {
+  flex: 1;
+  text-align: left;
+}
+
+.flag-select-chevron {
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.flag-icon {
+  display: block;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.flag-select-menu {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  z-index: 20;
+  margin: 0;
+  padding: 4px;
+  list-style: none;
+  background: var(--panel-alt);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.flag-select-menu li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 8px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.flag-select-menu li:hover,
+.flag-select-menu li[aria-selected="true"] {
+  background: var(--panel);
+}
+
 .input-prefixed {
   display: flex;
   align-items: center;
@@ -117,6 +188,41 @@ body {
 
 .input-prefixed input:focus {
   outline: none;
+}
+
+/* Date fields: native input drives the picker, styled span shows the
+   "08-May-2026" format the native control can't render on its own. */
+.date-field {
+  position: relative;
+}
+
+.date-field input[type="date"] {
+  position: relative;
+  z-index: 1;
+  color: transparent;
+  background: transparent;
+}
+
+.date-field input[type="date"]::-webkit-datetime-edit,
+.date-field input[type="date"]::-webkit-datetime-edit-fields-wrapper {
+  color: transparent;
+}
+
+.date-field input[type="date"]::-webkit-calendar-picker-indicator {
+  position: relative;
+  z-index: 2;
+  filter: invert(0.6);
+  cursor: pointer;
+}
+
+.date-display {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text);
+  font-size: 0.9rem;
+  pointer-events: none;
 }
 
 /* Chart panel */
@@ -171,6 +277,12 @@ body {
   stroke-width: 1;
 }
 
+.chart-grid-line {
+  stroke: var(--border);
+  stroke-width: 1;
+  opacity: 0.5;
+}
+
 .chart-axis-text {
   fill: var(--text-muted);
   font-size: 11px;
@@ -209,6 +321,23 @@ body {
   padding: 16px 18px;
 }
 
+/* Each metric's accent matches its color in the funnel chart above,
+   so the chart and the stat cards read as one consistent palette. The
+   card background itself also steps from dark to light across the
+   funnel stages, echoing how the bars stack up in the chart. */
+.stat-card--prospects {
+  --stat-color: var(--bar-prospects);
+  background: color-mix(in srgb, var(--stat-color) 12%, var(--panel));
+}
+.stat-card--leads {
+  --stat-color: var(--bar-leads);
+  background: color-mix(in srgb, var(--stat-color) 28%, var(--panel));
+}
+.stat-card--customers {
+  --stat-color: var(--bar-customers);
+  background: color-mix(in srgb, var(--stat-color) 45%, var(--panel));
+}
+
 .stat-head {
   display: flex;
   align-items: center;
@@ -217,7 +346,15 @@ body {
 }
 
 .stat-icon {
-  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 7px;
+  background: color-mix(in srgb, var(--stat-color) 22%, transparent);
+  color: var(--stat-color);
+  flex-shrink: 0;
 }
 
 .stat-name {
@@ -247,7 +384,7 @@ body {
 
 .stat-bar-fill {
   height: 100%;
-  background: var(--accent);
+  background: var(--stat-color);
   border-radius: 4px;
   transition: width 0.25s ease;
 }
@@ -280,7 +417,26 @@ body {
   text-align: right;
 }
 
+.range-track-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.range-track-fill {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 8px;
+  border-radius: 4px;
+  background: var(--accent);
+  pointer-events: none;
+}
+
 input[type="range"] {
+  position: relative;
+  z-index: 1;
   -webkit-appearance: none;
   appearance: none;
   width: 100%;
@@ -299,6 +455,8 @@ input[type="range"]::-webkit-slider-thumb {
   background: var(--accent);
   cursor: pointer;
   border: none;
+  box-shadow: 0 0 0 4px rgba(232, 236, 244, 0.15);
+  transition: box-shadow 0.15s ease;
 }
 
 input[type="range"]::-moz-range-thumb {
@@ -308,6 +466,24 @@ input[type="range"]::-moz-range-thumb {
   background: var(--accent);
   cursor: pointer;
   border: none;
+  box-shadow: 0 0 0 4px rgba(232, 236, 244, 0.15);
+  transition: box-shadow 0.15s ease;
+}
+
+input[type="range"]:hover::-webkit-slider-thumb,
+input[type="range"]:focus-visible::-webkit-slider-thumb,
+input[type="range"]:active::-webkit-slider-thumb {
+  box-shadow: 0 0 0 6px rgba(232, 236, 244, 0.25);
+}
+
+input[type="range"]:hover::-moz-range-thumb,
+input[type="range"]:focus-visible::-moz-range-thumb,
+input[type="range"]:active::-moz-range-thumb {
+  box-shadow: 0 0 0 6px rgba(232, 236, 244, 0.25);
+}
+
+input[type="range"]:focus-visible {
+  outline: none;
 }
 
 /* Responsive */

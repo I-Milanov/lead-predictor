@@ -2,15 +2,23 @@
   "use strict";
 
   const el = {
+    languageSelect: document.getElementById("language-select"),
+    languageTrigger: document.getElementById("language-trigger"),
+    languageTriggerText: document.getElementById("language-trigger-text"),
+    languageMenu: document.getElementById("language-menu"),
     currency: document.getElementById("currency"),
     revenuePrefix: document.getElementById("revenue-prefix"),
     orderPrefix: document.getElementById("order-prefix"),
     campaignStart: document.getElementById("campaign-start"),
+    campaignStartDisplay: document.getElementById("campaign-start-display"),
     campaignEnd: document.getElementById("campaign-end"),
+    campaignEndDisplay: document.getElementById("campaign-end-display"),
     totalRevenue: document.getElementById("total-revenue"),
     avgOrderValue: document.getElementById("avg-order-value"),
     leadRate: document.getElementById("lead-rate"),
     prospectRate: document.getElementById("prospect-rate"),
+    leadRateFill: document.getElementById("lead-rate-fill"),
+    prospectRateFill: document.getElementById("prospect-rate-fill"),
     leadRateValue: document.getElementById("lead-rate-value"),
     prospectRateValue: document.getElementById("prospect-rate-value"),
     chart: document.getElementById("chart"),
@@ -74,6 +82,31 @@
     return Math.round(n).toLocaleString("en-US");
   }
 
+  const MONTH_ABBR = [
+    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+  ];
+
+  function formatDateDisplay(isoValue) {
+    if (!isoValue) return "";
+    const [year, month, day] = isoValue.split("-");
+    return `${day}-${MONTH_ABBR[Number(month) - 1]}-${year}`;
+  }
+
+  function syncSliderFill(input, fillEl) {
+    const min = Number(input.min) || 0;
+    const max = Number(input.max) || 100;
+    const percent = ((Number(input.value) - min) / (max - min)) * 100;
+    fillEl.style.width = Math.max(0, Math.min(100, percent)) + "%";
+  }
+
+  function syncDateDisplays() {
+    el.campaignStartDisplay.textContent = formatDateDisplay(
+      el.campaignStart.value
+    );
+    el.campaignEndDisplay.textContent = formatDateDisplay(el.campaignEnd.value);
+  }
+
   const svgNS = "http://www.w3.org/2000/svg";
 
   let tooltipEl = null;
@@ -109,6 +142,20 @@
 
     const maxProspects = Math.max(1, prospectsTotal);
     const scale = plotWidth / maxProspects;
+    const gridBottom = height - bottomPad + 6;
+    const tickCount = 6;
+
+    for (let t = 0; t <= tickCount; t++) {
+      const val = Math.round((maxProspects / tickCount) * t);
+      const x = leftPad + val * scale;
+      const gridLine = document.createElementNS(svgNS, "line");
+      gridLine.setAttribute("class", "chart-grid-line");
+      gridLine.setAttribute("x1", x);
+      gridLine.setAttribute("y1", topPad);
+      gridLine.setAttribute("x2", x);
+      gridLine.setAttribute("y2", gridBottom);
+      svg.appendChild(gridLine);
+    }
 
     const tooltip = getTooltip();
 
@@ -184,9 +231,8 @@
     axisLine.setAttribute("y2", height - bottomPad + 6);
     svg.appendChild(axisLine);
 
-    const ticks = 6;
-    for (let t = 0; t <= ticks; t++) {
-      const val = Math.round((maxProspects / ticks) * t);
+    for (let t = 0; t <= tickCount; t++) {
+      const val = Math.round((maxProspects / tickCount) * t);
       const x = leftPad + val * scale;
       const tickText = document.createElementNS(svgNS, "text");
       tickText.setAttribute("class", "chart-axis-text");
@@ -199,11 +245,15 @@
   }
 
   function render() {
+    syncDateDisplays();
+
     const { totalRevenue, avgOrderValue, leadRate, prospectRate, months } =
       readInputs();
 
     el.leadRateValue.textContent = leadRate.toFixed(2) + "%";
     el.prospectRateValue.textContent = prospectRate.toFixed(2) + "%";
+    syncSliderFill(el.leadRate, el.leadRateFill);
+    syncSliderFill(el.prospectRate, el.prospectRateFill);
 
     const customers = calcCustomers(totalRevenue, avgOrderValue);
     const leads = calcLeads(customers, leadRate);
@@ -226,6 +276,48 @@
 
     drawChart(prospects, leads, customers, months);
   }
+
+  function setupLanguageDropdown() {
+    const trigger = el.languageTrigger;
+    const menu = el.languageMenu;
+    const triggerFlag = trigger.querySelector(".flag-icon");
+
+    function close() {
+      menu.hidden = true;
+      trigger.setAttribute("aria-expanded", "false");
+    }
+
+    function open() {
+      menu.hidden = false;
+      trigger.setAttribute("aria-expanded", "true");
+    }
+
+    trigger.addEventListener("click", () => {
+      menu.hidden ? open() : close();
+    });
+
+    menu.querySelectorAll("li").forEach((option) => {
+      option.addEventListener("click", () => {
+        menu
+          .querySelectorAll("li")
+          .forEach((li) => li.setAttribute("aria-selected", "false"));
+        option.setAttribute("aria-selected", "true");
+        el.languageTriggerText.textContent = option.dataset.label;
+        triggerFlag.src = `https://flagcdn.com/24x18/${option.dataset.flag}.png`;
+        close();
+      });
+    });
+
+    document.addEventListener("click", (evt) => {
+      if (!el.languageSelect.contains(evt.target)) close();
+    });
+
+    document.addEventListener("keydown", (evt) => {
+      if (evt.key === "Escape") close();
+    });
+  }
+
+  setupLanguageDropdown();
 
   [
     el.currency,
