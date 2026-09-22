@@ -76,6 +76,16 @@
 
   const svgNS = "http://www.w3.org/2000/svg";
 
+  let tooltipEl = null;
+  function getTooltip() {
+    if (!tooltipEl) {
+      tooltipEl = document.createElement("div");
+      tooltipEl.className = "chart-tooltip";
+      el.chartWrap.appendChild(tooltipEl);
+    }
+    return tooltipEl;
+  }
+
   function drawChart(prospectsTotal, leadsTotal, customersTotal, months) {
     const svg = el.chart;
     svg.innerHTML = "";
@@ -99,6 +109,8 @@
 
     const maxProspects = Math.max(1, prospectsTotal);
     const scale = plotWidth / maxProspects;
+
+    const tooltip = getTooltip();
 
     for (let m = 1; m <= months; m++) {
       const fraction = m / months;
@@ -145,6 +157,21 @@
       label.setAttribute("text-anchor", "end");
       label.textContent = String(m);
       group.appendChild(label);
+
+      group.addEventListener("mousemove", (evt) => {
+        const rect = svg.getBoundingClientRect();
+        tooltip.style.display = "block";
+        tooltip.style.left = evt.clientX - rect.left + leftPad + "px";
+        tooltip.style.top = evt.clientY - rect.top + "px";
+        tooltip.innerHTML =
+          `<strong>Month #${m}</strong><br>` +
+          `Prospects: ${formatNumber(rowProspects)}<br>` +
+          `Leads: ${formatNumber(rowLeads)}<br>` +
+          `Customers: ${formatNumber(rowCustomers)}`;
+      });
+      group.addEventListener("mouseleave", () => {
+        tooltip.style.display = "none";
+      });
 
       svg.appendChild(group);
     }

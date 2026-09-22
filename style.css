@@ -176,6 +176,23 @@ body {
   font-size: 11px;
 }
 
+.chart-tooltip {
+  position: absolute;
+  background: #05070c;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 0.8rem;
+  line-height: 1.6;
+  pointer-events: none;
+  transform: translate(-50%, -110%);
+  white-space: nowrap;
+  z-index: 10;
+  display: none;
+}
+
+.chart-tooltip strong { color: var(--accent); }
+
 /* Stats */
 .stats {
   grid-column: 3;
